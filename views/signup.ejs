@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main | <%= title %>
+    </title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <nav>
+        <h1>SIGN UP</h1>
+        <ul>
+        <% if (user) { %>
+            <li>Welcome, <%= user.firstName %>
+            </li>
+            <li><a href="/logout">log out</a></li>
+    
+            <% } else { %>
+                <li><a href="/login">log in</a></li>
+                <li><a href="/signup" class="btn">sign up</a></li>
+                <% } %>
+        </ul>
+    </nav>
+    <div class="signup">
+        <form>
+            <label for="first-name">First Name</label>
+            <input type="text" name="firstName" id="firstName" required />
+            <!-- <div class="firstName error"></div> -->
+            <!-- <br />
+            <br /> -->
+
+            <label for="last-name">Last Name</label>
+            <input type="text" name="lastName" id="lastName" required />
+            <!-- <div class="lastName error"></div>
+            <br />
+            <br /> -->
+
+            <label for="email">Email Address</label>
+            <input type="text" name="email" id="email" required />
+            <div class="email error"></div>
+            <!-- <br />
+            <br /> -->
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required />
+            <div class="password error"></div>
+            <!-- <br />
+            <br /> -->
+            <button>SUBMIT</button>   
+        </form>
+
+    </div>
+        <script>
+            const form = document.querySelector("form");
+
+            // const fNameError = document.querySelector(".firstName.error");
+            // const lNameError = document.querySelector(".lastName.error");
+            const emailError = document.querySelector(".email.error");
+            const passwordError = document.querySelector(".password.error");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                // //resetting the errors
+                // fNameError.textContent = " ";
+                // lNameError.textContent = " ";
+                // emailError.textContent = "";
+                // passwordError.textContent = "";
+
+                //getting values
+                const firstName = form.firstName.value;
+                const lastName = form.lastName.value;
+                const email = form.email.value;
+                const password = form.password.value;
+
+                // fNameError.textContent = "I am here!!";
+                // lNameError.textContent = "I am here!!";
+                // emailError.textContent = "I am here!!";
+                // passwordError.textContent = "I am here!!";
+
+                try {
+                    const res = await fetch("/signup", {
+                        method: "POST",
+                        body: JSON.stringify({ firstName, lastName, email, password }),
+                        headers: { "Content-Type": "application/json" },
+                    });
+
+                    const data = await res.json();
+                    console.log(data);
+
+                    if (data.errorss) {
+                        console.log("there is an error!!!")
+
+                        // fNameError.textContent = data.errorss.firstName;
+                        // lNameError.textContent = data.errorss.lastName;
+                        emailError.textContent = data.errorss.email;
+                        passwordError.textContent = data.errorss.password;
+                    }
+
+                    if (data.userA) {
+                        location.assign('/');
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            });
+        </script>
+</body>
+</html>

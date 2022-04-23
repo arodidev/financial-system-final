@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Main | <%= title%> | <%= user.firstName%></title>
+    <style>
+      .totalCont {
+        display: none;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      #loanDateInput {
+        display: none;
+      }
+
+      .name {
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <h1>HOME</h1>
+
+      <% if (user) { %>
+      <li>Welcome, <span class="name"> <%= user.firstName %> </span></li>
+      <li class="btn"><a href="/logout">log out</a></li>
+
+      <% } else { %>
+      <li><a href="/login">log in</a></li>
+      <li><a href="/signup" class="btn">sign up</a></li>
+      <% } %>
+
+      <ul>
+        <li><a href="#section1">Loans</a></li>
+        <li><a href="#section2">Contributions</a></li>
+        <li><a href="#section3">Statements</a></li>
+        <li><a href="#section4">Loan statement</a></li>
+        <!-- <li><a href="#section5">member contributions</a></li> -->
+      </ul>
+    </nav>
+
+    <div id="section1">
+      <div class="loanForm">
+        <form action="/loans" method="post">
+          <div class="hide">
+            <label for="email">Email Address: </label>
+            <input type="text" name="email" id="email" class="email" required />
+            <br />
+            <br />
+          </div>
+
+          <label for="loanAmount">How much do you want to borrow?</label>
+          <input
+            type="number"
+            name="loanAmount"
+            id="loanAmount"
+            class="loanAmount"
+            required
+          />
+          <input type="number" class="hide" id="juju" />
+
+          <button class="loanButton">APPLY FOR LOAN</button> <br />
+
+          <% if (!user.loanAmount==0) { %>
+
+          <p class="info">
+            You already have an outstanding loan! Repay loan to activate
+            borrowing.
+          </p>
+
+          <% } %>
+
+          <p class="excess"></p>
+
+          <label for="loanDate">Date and time: </label>
+          <input
+            type="text"
+            name="loanDate"
+            id="loanDateInput"
+            class="loanDate"
+          />
+
+          <p id="loanDateP"></p>
+        </form>
+      </div>
+    </div>
+
+    <br /><br />
+    <div id="section2">
+      <div class="contForm">
+        <form action="/contribution" method="post">
+          <div class="hide">
+            <label for="email">Email Address: </label>
+            <input
+              type="text"
+              name="email"
+              id="email2"
+              class="email2"
+              required
+            />
+            <br />
+            <br />
+          </div>
+          <label for="monthlyCont"
+            >What will you be contributing this month?</label
+          >
+          <input
+            type="number"
+            name="monthlyCont"
+            id="monthlyCont"
+            class="monthlyCont"
+            required
+          />
+          <br />
+          <br />
+          <input
+            type="number"
+            name="totalCont"
+            class="totalCont"
+            id="totalCont"
+          />
+          <button class="btn">SUBMIT INFO</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="section3">
+      <div class="report">
+        <h1>GENERAL STATEMENT</h1>
+        <label for="firstName">First Name: <%= user.firstName %></label> <br />
+        <label for="lastName">Last Name: <%= user.lastName %></label><br />
+        <label for="email">Your Email: <%= user.email %></label><br />
+        <label for="totalCont"
+          >Total Contributions: ksh <%= user.totalCont %></label
+        ><br />
+        <label for="monthlyCont"
+          >Your latest contribution was: ksh <%= user.monthlyCont%></label
+        ><br />
+        <!-- <label for="date">On date: <%= user.loanDate%> </label> -->
+      </div>
+    </div>
+    <div id="section4">
+      <div class="report">
+        <h1>LOAN STATEMENT</h1>
+
+        <% if(user.loanAmount) { %>
+        <label for="loanAmount">
+          You have an unpaid loan of : ksh <%= user.loanAmount %>
+        </label>
+
+        <br />
+        <label for="monthlyCont"> Taken on date : <%= user.loanDate%> </label>
+        <br />
+
+        <% } else { %>
+        <label>
+          You have no current unpaid loans, feel free to apply if you fit the
+          criteria.</label
+        >
+        <% } %>
+      </div>
+    </div>
+    <!-- <div id="section5">
+      <div class="data">
+      </div>
+    </div> -->
+
+    <script>
+      window.addEventListener("scroll", () => {
+        var nav = document.querySelector("nav");
+        nav.classList.toggle("sticky", window.scrollY > 0);
+      });
+
+      //selectors
+      const btn = document.querySelector("button.btn");
+      const email = document.querySelector("#email");
+      const email2 = document.querySelector("#email2");
+      const dateToday = document.querySelector("#loanDateP");
+      const loanDateInput = document.querySelector("#loanDateInput");
+      const totalCont = document.querySelector("#totalCont");
+      const info = document.querySelector("p.info");
+      const loanAmount = document.querySelector("form.loanAmount");
+      const excess = document.querySelector("p.excess");
+      const loanButton = document.querySelector("button.loanButton");
+      const juju = document.querySelector("#juju");
+
+      loanButton.addEventListener("click", () => {
+        alert(
+          "Hey there" +
+            "<%= user.Firstname %>" +
+            ", this is to confirm your loan application"
+        );
+      });
+
+      totalCont.value = "<%= user.totalCont %>";
+
+      const currentDate = new Date();
+
+      dateToday.innerHTML = currentDate;
+      loanDateInput.value = currentDate;
+
+      email.value = "<%= user.email %>";
+      email2.value = "<%= user.email %>";
+
+      if (info.innerHTML.includes("You already have an outstanding loan!")) {
+        document.querySelector("#loanAmount").disabled = true;
+        loanButton.disabled = true;
+        loanButton.innerHTML = "Loan disabled";
+      }
+
+      // const data = await res.json();
+      // console.log(data);
+      
+    </script>
+  </body>
+</html>
