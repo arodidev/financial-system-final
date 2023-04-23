@@ -9,7 +9,7 @@ const { json } = require('express');
 const server = express();
 
 //database
-const dbURI = 'mongodb+srv://jameson:jameson@cluster0.pcwhc.mongodb.net/users?retryWrites=true&w=majority';
+const dbURI = 'mongodb+srv://jameson:jameson@cluster0.pcwhc.mongodb.net/?retryWrites=true&w=majority';
 mongoose.connect(dbURI,
     { useNewUrlParser: true, useUnifiedTopology: true }) //used to remove deprication warning (not very important)
     .then((result) => {
@@ -24,7 +24,7 @@ mongoose.connect(dbURI,
 server.set('view engine', 'ejs');
 
 //middleware
-server.use(express.static('public'));
+server.use(express.static('public')); //makes files in the public folder accessible 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cookieParser());
