@@ -87,8 +87,8 @@ const checkUser = (req, res, next) => {
 }
 
 //  --ROUTES--
-
 server.get('*', checkUser);
+
 //homepage
 server.get('/', requireAuth, (req, res) => {
     res.render('index', { title: "Home" })
