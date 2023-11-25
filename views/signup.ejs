@@ -9,19 +9,20 @@
     </title>
     <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
     <nav>
         <h1>SIGN UP</h1>
         <ul>
-        <% if (user) { %>
-            <li>Welcome, <%= user.firstName %>
-            </li>
-            <li><a href="/logout">log out</a></li>
-    
-            <% } else { %>
-                <li><a href="/login">log in</a></li>
-                <li><a href="/signup" class="btn">sign up</a></li>
-                <% } %>
+            <% if (user) { %>
+                <li>Welcome, <%= user.firstName %>
+                </li>
+                <li><a href="/logout">log out</a></li>
+
+                <% } else { %>
+                    <li><a href="/login">log in</a></li>
+                    <li><a href="/signup" class="btn">sign up</a></li>
+                    <% } %>
         </ul>
     </nav>
     <div class="signup">
@@ -49,64 +50,68 @@
             <div class="password error"></div>
             <!-- <br />
             <br /> -->
-            <button>SUBMIT</button>   
+            <button>SUBMIT</button>
         </form>
 
     </div>
-        <script>
-            const form = document.querySelector("form");
+    <script>
+        const form = document.querySelector("form");
 
-            // const fNameError = document.querySelector(".firstName.error");
-            // const lNameError = document.querySelector(".lastName.error");
-            const emailError = document.querySelector(".email.error");
-            const passwordError = document.querySelector(".password.error");
+        // const fNameError = document.querySelector(".firstName.error");
+        // const lNameError = document.querySelector(".lastName.error");
+        const emailError = document.querySelector(".email.error");
+        const passwordError = document.querySelector(".password.error");
 
-            form.addEventListener("submit", async (e) => {
-                e.preventDefault();
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-                // //resetting the errors
-                // fNameError.textContent = " ";
-                // lNameError.textContent = " ";
-                // emailError.textContent = "";
-                // passwordError.textContent = "";
+            // //resetting the errors
+            // fNameError.textContent = " ";
+            // lNameError.textContent = " ";
+            // emailError.textContent = "";
+            // passwordError.textContent = "";
 
-                //getting values
-                const firstName = form.firstName.value;
-                const lastName = form.lastName.value;
-                const email = form.email.value;
-                const password = form.password.value;
+            //getting values
+            const firstName = form.firstName.value;
+            const lastName = form.lastName.value;
+            const email = form.email.value;
+            const password = form.password.value;
 
-                // fNameError.textContent = "I am here!!";
-                // lNameError.textContent = "I am here!!";
-                // emailError.textContent = "I am here!!";
-                // passwordError.textContent = "I am here!!";
 
-                try {
-                    const res = await fetch("/signup", {
-                        method: "POST",
-                        body: JSON.stringify({ firstName, lastName, email, password }),
-                        headers: { "Content-Type": "application/json" },
-                    });
 
-                    const data = await res.json();
-                    console.log(data);
+            // fNameError.textContent = "I am here!!";
+            // lNameError.textContent = "I am here!!";
+            // emailError.textContent = "I am here!!";
+            // passwordError.textContent = "I am here!!";
 
-                    if (data.errorss) {
-                        console.log("there is an error!!!")
+            try {
+                const res = await fetch("/signup", {
+                    method: "POST",
+                    body: JSON.stringify({ firstName, lastName, email, password }),
+                    headers: { "Content-Type": "application/json" },
+                });
 
-                        // fNameError.textContent = data.errorss.firstName;
-                        // lNameError.textContent = data.errorss.lastName;
-                        emailError.textContent = data.errorss.email;
-                        passwordError.textContent = data.errorss.password;
-                    }
+                const data = await res.json();
+                const { email, password, firstName, lastName } = data
+                console.log(data);
 
-                    if (data.userA) {
-                        location.assign('/');
-                    }
-                } catch (err) {
-                    console.log(err);
+                if (res.status === 400) {
+                    console.log("there is an error!!!")
+
+                    // fNameError.textContent = data.firstName;
+                    // lNameError.textContent = data.lastName;
+                    emailError.textContent = data.email;
+                    passwordError.textContent = data.password;
                 }
-            });
-        </script>
+
+                if (data.userA) {
+                    location.assign('/');
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        });
+    </script>
 </body>
+
 </html>

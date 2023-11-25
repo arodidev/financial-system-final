@@ -12,7 +12,7 @@ const dbURI =
   'mongodb+srv://jameson:jameson@cluster0.pcwhc.mongodb.net/?retryWrites=true&w=majority'
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true }) // used to remove deprication warning (not very important)
-  .then((result) => {
+  .then(() => {
     server.listen(3000) // listen for requests after connection to db is succesful
     console.log(
       'Connection to database successful, port 3000 listening for requests'
@@ -87,7 +87,7 @@ const checkUser = (req, res, next) => {
 }
 
 //  --ROUTES--
-server.get('*', checkUser)
+server.get('*', checkUser) // run checkUser for all route requests
 
 // homepage
 server.get('/', requireAuth, (req, res) => {
@@ -105,16 +105,16 @@ server.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password } = req.body
 
   try {
-    const userA = await dataModel.create({
+    const newUser = await dataModel.create({
       firstName,
       lastName,
       email,
       password
     })
 
-    const token = createToken(userA._id)
+    const token = createToken(newUser._id)
     res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
-    res.status(201).json({ userA })
+    res.status(201).json({ newUser })
   } catch (err) {
     const errors = handleErrors(err)
     res.status(400).json(errors)
